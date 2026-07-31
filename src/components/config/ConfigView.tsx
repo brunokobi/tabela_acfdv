@@ -17,7 +17,7 @@ export function ConfigView() {
   return (
     <div className="mx-auto max-w-5xl space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
-        <Card icon={Trophy} title="Nome do campeonato">
+        <Card icon={Trophy} title="Nome do campeonato" className="md:col-span-2">
           <input
             value={config.name}
             onChange={(e) => updateConfig({ name: e.target.value })}
@@ -42,15 +42,16 @@ export function ConfigView() {
           />
         </Card>
 
-        <Card icon={Users} title={`Equipes (${teams.length})`}>
+        <Card
+          icon={Users}
+          title={`Equipes (${teams.length})`}
+          className="md:col-span-2"
+          action={config.useGroupStage && <DrawGroupsButton />}
+        >
           <TeamManager />
         </Card>
 
-        <Card
-          icon={Shuffle}
-          title="Formato do campeonato"
-          action={config.useGroupStage && <DrawGroupsButton />}
-        >
+        <Card icon={Shuffle} title="Formato do campeonato">
           <RulesEditor />
         </Card>
 

@@ -53,27 +53,29 @@ export function DrawRevealOverlay({ title, items, pool, onFinish }: DrawRevealOv
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/85 px-6 backdrop-blur-sm">
-      <p className="mb-2 text-xs font-medium tracking-widest text-green-400 uppercase">{title}</p>
-      <p className="mb-6 text-lg text-neutral-300">{current.label}</p>
-      <p className="mb-10 max-w-full truncate text-4xl font-bold text-green-400">{spinningText}</p>
+      <div className="flex w-full max-w-3xl flex-col items-center rounded-2xl border-4 border-green-400 bg-black/60 px-16 py-6 shadow-[0_0_45px_rgba(34,197,94,0.7)]">
+        <p className="mb-2 text-xs font-medium tracking-widest text-green-400 uppercase">{title}</p>
+        <p className="mb-4 text-lg text-neutral-300">{current.label}</p>
+        <p className="mb-6 max-w-full truncate text-4xl font-bold text-green-400">{spinningText}</p>
 
-      {revealed.length > 0 && (
-        <div className="mb-10 flex max-w-2xl flex-wrap justify-center gap-2">
-          {revealed.map((r, i) => (
-            <span key={i} className="rounded bg-white/10 px-2 py-1 text-sm text-neutral-300">
-              {r}
-            </span>
-          ))}
-        </div>
-      )}
+        {revealed.length > 0 && (
+          <div className="mb-6 flex max-w-2xl flex-wrap justify-center gap-2">
+            {revealed.map((r, i) => (
+              <span key={i} className="rounded bg-white/10 px-2 py-1 text-sm text-neutral-300">
+                {r}
+              </span>
+            ))}
+          </div>
+        )}
 
-      <button
-        type="button"
-        onClick={onFinish}
-        className="rounded-md border border-white/30 px-4 py-2 text-sm text-white hover:bg-white/10"
-      >
-        Pular animação
-      </button>
+        <button
+          type="button"
+          onClick={onFinish}
+          className="rounded-md border border-white/30 px-4 py-2 text-sm text-white hover:bg-white/10"
+        >
+          Pular animação
+        </button>
+      </div>
     </div>
   )
 }

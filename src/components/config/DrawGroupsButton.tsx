@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { Shuffle } from 'lucide-react'
+import { Dices } from 'lucide-react'
 import { useTournamentStore, useTournamentStoreApi } from '../../store/tournamentStore'
 import { DrawRevealOverlay, type RevealItem } from '../shared/DrawRevealOverlay'
 
 export function DrawGroupsButton() {
   const config = useTournamentStore((s) => s.config)
-  const groups = useTournamentStore((s) => s.groups)
   const teams = useTournamentStore((s) => s.teams)
   const drawGroups = useTournamentStore((s) => s.drawGroups)
   const storeApi = useTournamentStoreApi()
@@ -28,10 +27,10 @@ export function DrawGroupsButton() {
         type="button"
         onClick={handleDraw}
         disabled={teams.length < config.groupCount}
-        className="flex items-center gap-1.5 rounded-md border border-neutral-700 px-2.5 py-1 text-xs font-medium text-neutral-300 hover:border-green-500 hover:text-green-400 disabled:opacity-40"
+        className="flex items-center justify-center gap-2 rounded-md border-2 border-green-500/50 bg-transparent px-5 py-2.5 text-base font-semibold text-green-400 hover:bg-green-500/10 disabled:opacity-40 disabled:[animation:none] animate-[pulse-border_1.6s_ease-in-out_infinite]"
       >
-        <Shuffle className="h-3.5 w-3.5" />
-        {groups.length > 0 ? 'Sortear novamente' : 'Sortear'}
+        <Dices className="h-5 w-5 text-green-400" />
+        Sortear
       </button>
 
       {revealItems && (
