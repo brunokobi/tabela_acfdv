@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Shuffle } from 'lucide-react'
-import { useTournamentStore } from '../../store/tournamentStore'
+import { useTournamentStore, useTournamentStoreApi } from '../../store/tournamentStore'
 import { DrawRevealOverlay, type RevealItem } from '../shared/DrawRevealOverlay'
 
 export function DrawGroupsButton() {
@@ -8,11 +8,12 @@ export function DrawGroupsButton() {
   const groups = useTournamentStore((s) => s.groups)
   const teams = useTournamentStore((s) => s.teams)
   const drawGroups = useTournamentStore((s) => s.drawGroups)
+  const storeApi = useTournamentStoreApi()
   const [revealItems, setRevealItems] = useState<RevealItem[] | null>(null)
 
   function handleDraw() {
     drawGroups()
-    const state = useTournamentStore.getState()
+    const state = storeApi.getState()
     const items = state.groups.flatMap((g) =>
       state.teams
         .filter((t) => t.groupId === g.id)

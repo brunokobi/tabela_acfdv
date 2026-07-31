@@ -1,11 +1,15 @@
+import { useState } from 'react'
+import { Layers } from 'lucide-react'
 import { useTournamentStore } from '../../store/tournamentStore'
 import { PLATFORMS, GAMES } from '../../lib/catalog'
 import { Logo } from '../shared/Logo'
+import { TournamentManager } from '../tournaments/TournamentManager'
 
 export function Header() {
   const config = useTournamentStore((s) => s.config)
   const platform = PLATFORMS.find((p) => p.id === config.platform)
   const game = GAMES.find((g) => g.id === config.game)
+  const [managerOpen, setManagerOpen] = useState(false)
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
@@ -20,6 +24,14 @@ export function Header() {
         </h1>
       </div>
       <div className="flex items-center gap-4">
+        <button
+          type="button"
+          onClick={() => setManagerOpen(true)}
+          className="flex items-center gap-2 rounded-md border border-neutral-700 px-3 py-1.5 text-sm text-neutral-300 hover:border-green-500 hover:text-green-400"
+        >
+          <Layers className="h-4 w-4" /> Torneios
+        </button>
+        {managerOpen && <TournamentManager onClose={() => setManagerOpen(false)} />}
         {platform && (
           <span className="flex items-center gap-2 text-sm text-neutral-300">
             <Logo

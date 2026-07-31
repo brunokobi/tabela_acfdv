@@ -1,4 +1,6 @@
-import { create } from 'zustand'
+import { createContext, useContext } from 'react'
+import { createStore, type StoreApi } from 'zustand/vanilla'
+import { useStore } from 'zustand/react'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type {
   Group,
@@ -53,7 +55,7 @@ function ensureRecord(
   )
 }
 
-interface TournamentState {
+export interface TournamentState {
   config: TournamentConfig
   teams: Team[]
   groups: Group[]
@@ -84,124 +86,145 @@ interface TournamentState {
   resetAll: () => void
 }
 
-export const useTournamentStore = create<TournamentState>()(
-  persist(
-    (set, get) => ({
-      config: defaultConfig(),
-      teams: [],
-      groups: [],
-      groupMatches: [],
-      knockoutDraw: null,
-      knockoutRecords: {},
+export function createTournamentStore(storageKey: string): StoreApi<TournamentState> {
+  return createStore<TournamentState>()(
+    persist(
+      (set, get) => ({
+        config: defaultConfig(),
+        teams: [],
+        groups: [],
+        groupMatches: [],
+        knockoutDraw: null,
+        knockoutRecords: {},
 
-      updateConfig: (patch) => set((state) => ({ config: { ...state.config, ...patch } })),
-      setTiebreakers: (tiebreakers) =>
-        set((state) => ({ config: { ...state.config, tiebreakers } })),
+        updateConfig: (patch) => set((state) => ({ config: { ...state.config, ...patch } })),
+        setTiebreakers: (tiebreakers) =>
+          set((state) => ({ config: { ...state.config, tiebreakers } })),
 
-      addTeam: (name) =>
-        set((state) => ({
-          teams: [...state.teams, { id: crypto.randomUUID(), name, groupId: null }],
-        })),
-      removeTeam: (id) =>
-        set((state) => ({ teams: state.teams.filter((t) => t.id !== id) })),
-      renameTeam: (id, name) =>
-        set((state) => ({
-          teams: state.teams.map((t) => (t.id === id ? { ...t, name } : t)),
-        })),
+        addTeam: (name) =>
+          set((state) => ({
+            teams: [...state.teams, { id: crypto.randomUUID(), name, groupId: null }],
+          })),
+        removeTeam: (id) =>
+          set((state) => ({ teams: state.teams.filter((t) => t.id !== id) })),
+        renameTeam: (id, name) =>
+          set((state) => ({
+            teams: state.teams.map((t) => (t.id === id ? { ...t, name } : t)),
+          })),
 
-      drawGroups: () => {
-        const { teams, config } = get()
-        if (config.groupCount < 1 || teams.length < config.groupCount) return
+        drawGroups: () => {
+          const { teams, config } = get()
+          if (config.groupCount < 1 || teams.length < config.groupCount) return
 
-        const groups: Group[] = Array.from({ length: config.groupCount }, (_, i) => ({
-          id: `g${i}`,
-          name: String.fromCharCode(65 + i),
-        }))
-        const buckets = distributeIntoGroups(teams, config.groupCount)
+          const groups: Group[] = Array.from({ length: config.groupCount }, (_, i) => ({
+            id: `g${i}`,
+            name: String.fromCharCode(65 + i),
+          }))
+          const buckets = distributeIntoGroups(teams, config.groupCount)
 
-        const updatedTeams: Team[] = []
-        const groupMatches: GroupMatch[] = []
-        buckets.forEach((bucket, i) => {
-          const groupId = groups[i].id
-          for (const team of bucket) updatedTeams.push({ ...team, groupId })
-          groupMatches.push(
-            ...generateGroupMatches(
-              bucket.map((t) => t.id),
-              groupId,
-              config.groupLegs,
-            ),
-          )
-        })
-
-        set({ groups, teams: updatedTeams, groupMatches, knockoutDraw: null, knockoutRecords: {} })
-      },
-
-      setGroupMatchScore: (matchId, homeGoals, awayGoals) =>
-        set((state) => ({
-          groupMatches: state.groupMatches.map((m) =>
-            m.id === matchId ? { ...m, homeGoals, awayGoals } : m,
-          ),
-        })),
-
-      drawKnockout: () => {
-        const { teams, groups, groupMatches, config } = get()
-        let poolIds: string[]
-        if (config.useGroupStage) {
-          poolIds = groups.flatMap((g) => {
-            const groupTeams = teams.filter((t) => t.groupId === g.id)
-            const matches = groupMatches.filter((m) => m.groupId === g.id)
-            const standings = computeStandings(groupTeams, matches, config.tiebreakers)
-            return standings.slice(0, config.qualifiersPerGroup).map((s) => s.teamId)
+          const updatedTeams: Team[] = []
+          const groupMatches: GroupMatch[] = []
+          buckets.forEach((bucket, i) => {
+            const groupId = groups[i].id
+            for (const team of bucket) updatedTeams.push({ ...team, groupId })
+            groupMatches.push(
+              ...generateGroupMatches(
+                bucket.map((t) => t.id),
+                groupId,
+                config.groupLegs,
+              ),
+            )
           })
-        } else {
-          poolIds = teams.map((t) => t.id)
-        }
-        if (poolIds.length < 2) return
-        set({ knockoutDraw: buildKnockoutDraw(poolIds), knockoutRecords: {} })
+
+          set({ groups, teams: updatedTeams, groupMatches, knockoutDraw: null, knockoutRecords: {} })
+        },
+
+        setGroupMatchScore: (matchId, homeGoals, awayGoals) =>
+          set((state) => ({
+            groupMatches: state.groupMatches.map((m) =>
+              m.id === matchId ? { ...m, homeGoals, awayGoals } : m,
+            ),
+          })),
+
+        drawKnockout: () => {
+          const { teams, groups, groupMatches, config } = get()
+          let poolIds: string[]
+          if (config.useGroupStage) {
+            poolIds = groups.flatMap((g) => {
+              const groupTeams = teams.filter((t) => t.groupId === g.id)
+              const matches = groupMatches.filter((m) => m.groupId === g.id)
+              const standings = computeStandings(groupTeams, matches, config.tiebreakers)
+              return standings.slice(0, config.qualifiersPerGroup).map((s) => s.teamId)
+            })
+          } else {
+            poolIds = teams.map((t) => t.id)
+          }
+          if (poolIds.length < 2) return
+          set({ knockoutDraw: buildKnockoutDraw(poolIds), knockoutRecords: {} })
+        },
+
+        setKnockoutLeg: (key, legIndex, side, value) =>
+          set((state) => {
+            const record = ensureRecord(state.knockoutRecords, key, state.config.knockoutLegs)
+            const legs = record.legs.slice()
+            legs[legIndex] = {
+              ...legs[legIndex],
+              [side === 'home' ? 'homeGoals' : 'awayGoals']: value,
+            }
+            return { knockoutRecords: { ...state.knockoutRecords, [key]: { ...record, legs } } }
+          }),
+
+        setKnockoutPenalty: (key, side, value) =>
+          set((state) => {
+            const record = ensureRecord(state.knockoutRecords, key, state.config.knockoutLegs)
+            const penalties = record.penalties ?? { home: null, away: null }
+            return {
+              knockoutRecords: {
+                ...state.knockoutRecords,
+                [key]: { ...record, penalties: { ...penalties, [side]: value } },
+              },
+            }
+          }),
+
+        setKnockoutWO: (key, side) =>
+          set((state) => {
+            const record = ensureRecord(state.knockoutRecords, key, state.config.knockoutLegs)
+            return { knockoutRecords: { ...state.knockoutRecords, [key]: { ...record, wo: side } } }
+          }),
+
+        resetAll: () =>
+          set({
+            config: defaultConfig(),
+            teams: [],
+            groups: [],
+            groupMatches: [],
+            knockoutDraw: null,
+            knockoutRecords: {},
+          }),
+      }),
+      {
+        name: storageKey,
+        storage: createJSONStorage(() => localStorage),
       },
+    ),
+  )
+}
 
-      setKnockoutLeg: (key, legIndex, side, value) =>
-        set((state) => {
-          const record = ensureRecord(state.knockoutRecords, key, state.config.knockoutLegs)
-          const legs = record.legs.slice()
-          legs[legIndex] = {
-            ...legs[legIndex],
-            [side === 'home' ? 'homeGoals' : 'awayGoals']: value,
-          }
-          return { knockoutRecords: { ...state.knockoutRecords, [key]: { ...record, legs } } }
-        }),
+export const TournamentStoreContext = createContext<StoreApi<TournamentState> | null>(null)
 
-      setKnockoutPenalty: (key, side, value) =>
-        set((state) => {
-          const record = ensureRecord(state.knockoutRecords, key, state.config.knockoutLegs)
-          const penalties = record.penalties ?? { home: null, away: null }
-          return {
-            knockoutRecords: {
-              ...state.knockoutRecords,
-              [key]: { ...record, penalties: { ...penalties, [side]: value } },
-            },
-          }
-        }),
+export function useTournamentStore<T>(selector: (state: TournamentState) => T): T {
+  const store = useContext(TournamentStoreContext)
+  if (!store) {
+    throw new Error('useTournamentStore must be used within a TournamentStoreProvider')
+  }
+  return useStore(store, selector)
+}
 
-      setKnockoutWO: (key, side) =>
-        set((state) => {
-          const record = ensureRecord(state.knockoutRecords, key, state.config.knockoutLegs)
-          return { knockoutRecords: { ...state.knockoutRecords, [key]: { ...record, wo: side } } }
-        }),
-
-      resetAll: () =>
-        set({
-          config: defaultConfig(),
-          teams: [],
-          groups: [],
-          groupMatches: [],
-          knockoutDraw: null,
-          knockoutRecords: {},
-        }),
-    }),
-    {
-      name: 'esports-bracket-v1',
-      storage: createJSONStorage(() => localStorage),
-    },
-  ),
-)
+/** Escape hatch for imperative reads (e.g. right after dispatching an action) — use the selector hook otherwise. */
+export function useTournamentStoreApi(): StoreApi<TournamentState> {
+  const store = useContext(TournamentStoreContext)
+  if (!store) {
+    throw new Error('useTournamentStoreApi must be used within a TournamentStoreProvider')
+  }
+  return store
+}

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Shuffle, LayoutList, Network } from 'lucide-react'
-import { useTournamentStore } from '../../store/tournamentStore'
+import { useTournamentStore, useTournamentStoreApi } from '../../store/tournamentStore'
 import { buildKnockoutView } from '../../lib/bracket'
 import { cn } from '../../lib/cn'
 import { DrawRevealOverlay, type RevealItem } from '../shared/DrawRevealOverlay'
@@ -20,6 +20,7 @@ export function KnockoutView() {
   const setKnockoutLeg = useTournamentStore((s) => s.setKnockoutLeg)
   const setKnockoutPenalty = useTournamentStore((s) => s.setKnockoutPenalty)
   const setKnockoutWO = useTournamentStore((s) => s.setKnockoutWO)
+  const storeApi = useTournamentStoreApi()
   const [viewMode, setViewMode] = useState<ViewMode>('chaveamento')
   const [revealItems, setRevealItems] = useState<RevealItem[] | null>(null)
 
@@ -44,7 +45,7 @@ export function KnockoutView() {
 
   function handleDraw() {
     drawKnockout()
-    const state = useTournamentStore.getState()
+    const state = storeApi.getState()
     const draw = state.knockoutDraw
     if (!draw) return
     const teamName = (id: string | null) =>
