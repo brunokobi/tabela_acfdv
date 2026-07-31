@@ -1,0 +1,112 @@
+import type { Leg, LegsMode } from '../../types'
+import type { ResolvedMatch } from '../../lib/bracket'
+import { ScoreInput } from '../shared/ScoreInput'
+import { cn } from '../../lib/cn'
+
+export interface MatchCardHandlers {
+  onLegChange: (key: string, legIndex: number, side: 'home' | 'away', value: number | null) => void
+  onPenaltyChange: (key: string, side: 'home' | 'away', value: number | null) => void
+  onWOChange: (key: string, side: 'home' | 'away' | null) => void
+}
+
+interface MatchCardProps extends MatchCardHandlers {
+  match: ResolvedMatch
+  legsMode: LegsMode
+}
+
+const EMPTY_LEG: Leg = { homeGoals: null, awayGoals: null }
+
+export function MatchCard({ match, legsMode, onLegChange, onPenaltyChange, onWOChange }: MatchCardProps) {
+  const { key, home, away, homeName, awayName, record, winner, needsPens } = match
+  const legCount = legsMode === 'double' ? 2 : 1
+  const legs = record?.legs ?? Array.from({ length: legCount }, () => EMPTY_LEG)
+  const disabled = !home || !away
+
+  return (
+    <div className="w-64 rounded-lg border border-neutral-200 bg-white p-3 text-sm shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+      <p className="mb-2 text-xs font-medium uppercase text-neutral-400">{match.phase}</p>
+      <TeamRow
+        name={homeName}
+        isWinner={winner != null && winner === home}
+        legs={legs}
+        side="home"
+        disabled={disabled}
+        onLegChange={(legIndex, v) => onLegChange(key, legIndex, 'home', v)}
+        onWO={() => onWOChange(key, record?.wo === 'home' ? null : 'home')}
+        woActive={record?.wo === 'home'}
+      />
+      <TeamRow
+        name={awayName}
+        isWinner={winner != null && winner === away}
+        legs={legs}
+        side="away"
+        disabled={disabled}
+        onLegChange={(legIndex, v) => onLegChange(key, legIndex, 'away', v)}
+        onWO={() => onWOChange(key, record?.wo === 'away' ? null : 'away')}
+        woActive={record?.wo === 'away'}
+      />
+      {needsPens && (
+        <div className="mt-2 flex items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-xs text-neutral-500 dark:border-neutral-800">
+          <span>Pênaltis</span>
+          <div className="flex items-center gap-1">
+            <ScoreInput
+              value={record?.penalties?.home ?? null}
+              onChange={(v) => onPenaltyChange(key, 'home', v)}
+            />
+            <span>×</span>
+            <ScoreInput
+              value={record?.penalties?.away ?? null}
+              onChange={(v) => onPenaltyChange(key, 'away', v)}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface TeamRowProps {
+  name: string
+  isWinner: boolean
+  legs: Leg[]
+  side: 'home' | 'away'
+  disabled: boolean
+  onLegChange: (legIndex: number, value: number | null) => void
+  onWO: () => void
+  woActive: boolean
+}
+
+function TeamRow({ name, isWinner, legs, side, disabled, onLegChange, onWO, woActive }: TeamRowProps) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 py-1',
+        isWinner && 'font-semibold text-emerald-600 dark:text-emerald-400',
+      )}
+    >
+      <span className="flex-1 truncate">{name}</span>
+      {legs.map((leg, i) => (
+        <ScoreInput
+          key={i}
+          value={side === 'home' ? leg.homeGoals : leg.awayGoals}
+          onChange={(v) => onLegChange(i, v)}
+          disabled={disabled}
+        />
+      ))}
+      <button
+        type="button"
+        onClick={onWO}
+        disabled={disabled}
+        title="Marcar W.O."
+        className={cn(
+          'rounded px-1 text-[10px] font-bold uppercase',
+          woActive
+            ? 'bg-amber-500 text-white'
+            : 'text-neutral-300 hover:text-amber-600 disabled:opacity-30 dark:text-neutral-600',
+        )}
+      >
+        WO
+      </button>
+    </div>
+  )
+}
