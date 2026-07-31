@@ -1,4 +1,5 @@
 import { useTournamentStore } from '../../store/tournamentStore'
+import { Panel } from '../shared/Panel'
 import { GroupCard } from './GroupCard'
 
 export function GroupsView() {
@@ -10,14 +11,16 @@ export function GroupsView() {
 
   if (!config.useGroupStage) {
     return (
-      <p className="mx-auto max-w-3xl px-6 py-8 text-sm text-neutral-500">
-        A fase de grupos está desativada na Configuração — o torneio vai direto para o mata-mata.
-      </p>
+      <Panel maxWidth="max-w-3xl">
+        <p className="text-sm text-neutral-500">
+          A fase de grupos está desativada na Configuração — o torneio vai direto para o mata-mata.
+        </p>
+      </Panel>
     )
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 px-6 py-8">
+    <Panel maxWidth="max-w-5xl">
       {groups.length === 0 ? (
         <p className="text-sm text-neutral-400">
           Cadastre as equipes e sorteie os grupos na aba Configuração.
@@ -37,6 +40,6 @@ export function GroupsView() {
           ))}
         </div>
       )}
-    </div>
+    </Panel>
   )
 }

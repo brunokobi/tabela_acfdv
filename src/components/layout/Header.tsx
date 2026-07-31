@@ -19,25 +19,25 @@ export function Header() {
           {config.name || 'Campeonato E-Futebol'}
         </h1>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {platform && (
-          <span className="flex items-center gap-1.5 text-sm text-neutral-400">
+          <span className="flex items-center gap-2 text-sm text-neutral-300">
             <Logo
               src={platform.logoSrc}
               alt={platform.label}
               fallbackIcon={platform.fallbackIcon}
-              className="h-5 w-5"
+              className="h-10 w-10 rounded-md ring-1 ring-white/10"
             />
             {platform.label}
           </span>
         )}
         {game && (
-          <span className="flex items-center gap-1.5 text-sm text-neutral-400">
+          <span className="flex items-center gap-2 text-sm text-neutral-300">
             <Logo
               src={game.logoSrc}
               alt={game.label}
               fallbackIcon={game.fallbackIcon}
-              className="h-5 w-5"
+              className="h-10 w-10 rounded-md ring-1 ring-white/10"
             />
             {game.label}
           </span>

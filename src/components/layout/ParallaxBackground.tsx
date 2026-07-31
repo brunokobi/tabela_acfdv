@@ -76,8 +76,6 @@ export function ParallaxBackground() {
       </div>
 
       <canvas ref={canvasRef} className="absolute inset-0 opacity-80" />
-
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70" />
     </div>
   )
 }

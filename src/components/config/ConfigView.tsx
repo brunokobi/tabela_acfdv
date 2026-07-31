@@ -1,5 +1,6 @@
 import { useTournamentStore } from '../../store/tournamentStore'
 import { PLATFORMS, GAMES } from '../../lib/catalog'
+import { Panel } from '../shared/Panel'
 import { CatalogSelector } from './CatalogSelector'
 import { TeamManager } from './TeamManager'
 import { RulesEditor } from './RulesEditor'
@@ -12,7 +13,7 @@ export function ConfigView() {
   const updateConfig = useTournamentStore((s) => s.updateConfig)
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8 px-6 py-8">
+    <Panel maxWidth="max-w-3xl">
       <div>
         <label className="mb-1 block text-sm font-medium text-neutral-400">
           Nome do campeonato
@@ -44,6 +45,6 @@ export function ConfigView() {
       {config.useGroupStage && <DrawGroupsButton />}
       <TiebreakerEditor />
       <DangerZone />
-    </div>
+    </Panel>
   )
 }

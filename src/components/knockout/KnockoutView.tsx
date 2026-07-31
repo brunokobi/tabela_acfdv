@@ -4,6 +4,7 @@ import { useTournamentStore } from '../../store/tournamentStore'
 import { buildKnockoutView } from '../../lib/bracket'
 import { cn } from '../../lib/cn'
 import { DrawRevealOverlay, type RevealItem } from '../shared/DrawRevealOverlay'
+import { Panel } from '../shared/Panel'
 import { KnockoutTable } from './KnockoutTable'
 import { BracketView } from './BracketView'
 
@@ -60,7 +61,7 @@ export function KnockoutView() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-6 py-8">
+    <Panel maxWidth="max-w-6xl" className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-neutral-500">
           {qualifiedCount} equipe{qualifiedCount === 1 ? '' : 's'} no mata-mata
@@ -130,6 +131,6 @@ export function KnockoutView() {
           {...handlers}
         />
       )}
-    </div>
+    </Panel>
   )
 }
