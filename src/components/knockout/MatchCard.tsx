@@ -12,11 +12,21 @@ export interface MatchCardHandlers {
 interface MatchCardProps extends MatchCardHandlers {
   match: ResolvedMatch
   legsMode: LegsMode
+  homeRowRef?: (el: HTMLDivElement | null) => void
+  awayRowRef?: (el: HTMLDivElement | null) => void
 }
 
 const EMPTY_LEG: Leg = { homeGoals: null, awayGoals: null }
 
-export function MatchCard({ match, legsMode, onLegChange, onPenaltyChange, onWOChange }: MatchCardProps) {
+export function MatchCard({
+  match,
+  legsMode,
+  onLegChange,
+  onPenaltyChange,
+  onWOChange,
+  homeRowRef,
+  awayRowRef,
+}: MatchCardProps) {
   const { key, home, away, homeName, awayName, record, winner, needsPens } = match
   const legCount = legsMode === 'double' ? 2 : 1
   const legs = record?.legs ?? Array.from({ length: legCount }, () => EMPTY_LEG)
@@ -26,6 +36,7 @@ export function MatchCard({ match, legsMode, onLegChange, onPenaltyChange, onWOC
     <div className="w-64 rounded-lg border border-neutral-800 bg-neutral-900 p-3 text-sm shadow-sm">
       <p className="mb-2 text-xs font-medium uppercase text-neutral-400">{match.phase}</p>
       <TeamRow
+        rowRef={homeRowRef}
         name={homeName}
         isWinner={winner != null && winner === home}
         legs={legs}
@@ -36,6 +47,7 @@ export function MatchCard({ match, legsMode, onLegChange, onPenaltyChange, onWOC
         woActive={record?.wo === 'home'}
       />
       <TeamRow
+        rowRef={awayRowRef}
         name={awayName}
         isWinner={winner != null && winner === away}
         legs={legs}
@@ -74,15 +86,14 @@ interface TeamRowProps {
   onLegChange: (legIndex: number, value: number | null) => void
   onWO: () => void
   woActive: boolean
+  rowRef?: (el: HTMLDivElement | null) => void
 }
 
-function TeamRow({ name, isWinner, legs, side, disabled, onLegChange, onWO, woActive }: TeamRowProps) {
+function TeamRow({ name, isWinner, legs, side, disabled, onLegChange, onWO, woActive, rowRef }: TeamRowProps) {
   return (
     <div
-      className={cn(
-        'flex items-center gap-2 py-1',
-        isWinner && 'font-semibold text-emerald-400',
-      )}
+      ref={rowRef}
+      className={cn('flex items-center gap-2 py-1', isWinner && 'font-semibold text-emerald-400')}
     >
       <span className="flex-1 truncate">{name}</span>
       {legs.map((leg, i) => (
