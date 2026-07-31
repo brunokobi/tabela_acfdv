@@ -2,8 +2,10 @@ import { useEffect, useRef } from 'react'
 
 const ICONS = ['⚽', '🏆', '🎮', '🕹', '👟', '🥅', '🏅']
 
-const FONT_SIZE = 20
-const FRAME_MS = 50
+const FONT_SIZE = 22
+const COLUMN_SPACING = FONT_SIZE * 2.4
+const FRAME_MS = 100
+const DRAW_PROBABILITY = 0.55
 
 /**
  * Matrix-style digital rain, canvas-driven (sports icons falling on black,
@@ -26,21 +28,22 @@ export function ParallaxBackground() {
     function resize() {
       canvas!.width = window.innerWidth
       canvas!.height = window.innerHeight
-      columns = Math.floor(canvas!.width / FONT_SIZE)
+      columns = Math.floor(canvas!.width / COLUMN_SPACING)
       drops = Array.from({ length: columns }, () => Math.floor(Math.random() * -50))
     }
     resize()
     window.addEventListener('resize', resize)
 
     function draw() {
-      ctx!.fillStyle = 'rgba(0, 0, 0, 0.06)'
+      ctx!.fillStyle = 'rgba(0, 0, 0, 0.08)'
       ctx!.fillRect(0, 0, canvas!.width, canvas!.height)
       ctx!.font = `${FONT_SIZE}px sans-serif`
-      ctx!.fillStyle = '#22c55e'
 
       for (let i = 0; i < columns; i++) {
-        const icon = ICONS[Math.floor(Math.random() * ICONS.length)]
-        ctx!.fillText(icon, i * FONT_SIZE, drops[i] * FONT_SIZE)
+        if (Math.random() < DRAW_PROBABILITY) {
+          const icon = ICONS[Math.floor(Math.random() * ICONS.length)]
+          ctx!.fillText(icon, i * COLUMN_SPACING, drops[i] * FONT_SIZE)
+        }
         if (drops[i] * FONT_SIZE > canvas!.height && Math.random() > 0.975) {
           drops[i] = 0
         }
@@ -74,7 +77,11 @@ export function ParallaxBackground() {
         <div className="absolute top-1/3 -right-40 h-[28rem] w-[28rem] rounded-full bg-green-400/10 blur-3xl" />
       </div>
 
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-80" />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 opacity-80"
+        style={{ filter: 'grayscale(1) sepia(1) hue-rotate(70deg) saturate(6) brightness(0.9)' }}
+      />
     </div>
   )
 }
