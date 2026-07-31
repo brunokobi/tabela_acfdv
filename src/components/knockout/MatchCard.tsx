@@ -12,6 +12,7 @@ export interface MatchCardHandlers {
 interface MatchCardProps extends MatchCardHandlers {
   match: ResolvedMatch
   legsMode: LegsMode
+  isFinal?: boolean
   homeRowRef?: (el: HTMLDivElement | null) => void
   awayRowRef?: (el: HTMLDivElement | null) => void
 }
@@ -21,6 +22,7 @@ const EMPTY_LEG: Leg = { homeGoals: null, awayGoals: null }
 export function MatchCard({
   match,
   legsMode,
+  isFinal,
   onLegChange,
   onPenaltyChange,
   onWOChange,
@@ -33,8 +35,22 @@ export function MatchCard({
   const disabled = !home || !away
 
   return (
-    <div className="w-64 rounded-lg border border-neutral-800 bg-neutral-900 p-3 text-sm shadow-sm">
-      <p className="mb-2 text-xs font-medium uppercase text-neutral-400">{match.phase}</p>
+    <div
+      className={cn(
+        'rounded-lg border p-3 shadow-sm',
+        isFinal
+          ? 'w-72 border-2 border-green-400 bg-neutral-900 text-base shadow-[0_0_14px_rgba(34,197,94,0.5)]'
+          : 'w-64 border-neutral-800 bg-neutral-900 text-sm',
+      )}
+    >
+      <p
+        className={cn(
+          'mb-2 font-medium uppercase text-neutral-400',
+          isFinal ? 'text-sm' : 'text-xs',
+        )}
+      >
+        {match.phase}
+      </p>
       <TeamRow
         rowRef={homeRowRef}
         name={homeName}

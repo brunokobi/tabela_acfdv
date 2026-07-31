@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { Trophy } from 'lucide-react'
 import type { LegsMode } from '../../types'
 import type { ResolvedMatch } from '../../lib/bracket'
 import { MatchCard, type MatchCardHandlers } from './MatchCard'
@@ -96,7 +97,8 @@ export function BracketView({ roundsData, thirdPlaceEntry, legsMode, ...handlers
 
         {roundsData.map((matches, r) => (
           <div key={r} style={{ minWidth: 256 }}>
-            <h3 className="mb-3 text-center text-xs font-semibold uppercase text-neutral-400">
+            <h3 className="mb-3 flex items-center justify-center gap-1.5 text-center text-xs font-semibold uppercase text-neutral-400">
+              {matches[0]?.phase === 'Final' && <Trophy className="h-3.5 w-3.5 text-green-400" />}
               {matches[0]?.phase}
             </h3>
             <div className="flex flex-col justify-around gap-4" style={{ height: columnHeight }}>
@@ -105,6 +107,7 @@ export function BracketView({ roundsData, thirdPlaceEntry, legsMode, ...handlers
                   key={m.key}
                   match={m}
                   legsMode={legsMode}
+                  isFinal={m.phase === 'Final'}
                   homeRowRef={registerRow(`${m.key}:home`)}
                   awayRowRef={registerRow(`${m.key}:away`)}
                   {...handlers}

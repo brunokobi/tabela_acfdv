@@ -1,3 +1,4 @@
+import { Trophy } from 'lucide-react'
 import type { LegsMode } from '../../types'
 import type { ResolvedMatch } from '../../lib/bracket'
 import { MatchCard, type MatchCardHandlers } from './MatchCard'
@@ -13,12 +14,19 @@ export function KnockoutTable({ roundsData, thirdPlaceEntry, legsMode, ...handle
     <div className="space-y-8">
       {roundsData.map((matches, r) => (
         <div key={r}>
-          <h3 className="mb-2 text-sm font-semibold text-neutral-400">
+          <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-neutral-400">
+            {matches[0]?.phase === 'Final' && <Trophy className="h-4 w-4 text-green-400" />}
             {matches[0]?.phase}
           </h3>
           <div className="flex flex-wrap gap-4">
             {matches.map((m) => (
-              <MatchCard key={m.key} match={m} legsMode={legsMode} {...handlers} />
+              <MatchCard
+                key={m.key}
+                match={m}
+                legsMode={legsMode}
+                isFinal={m.phase === 'Final'}
+                {...handlers}
+              />
             ))}
           </div>
         </div>

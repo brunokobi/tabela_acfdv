@@ -1,6 +1,24 @@
 import type { LegsMode } from '../../types'
 import { useTournamentStore } from '../../store/tournamentStore'
+import { Switch } from '../shared/Switch'
 import { cn } from '../../lib/cn'
+
+function ToggleRow({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string
+  checked: boolean
+  onChange: (v: boolean) => void
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-sm font-medium">{label}</span>
+      <Switch checked={checked} onChange={onChange} />
+    </div>
+  )
+}
 
 function NumberField({
   label,
@@ -39,7 +57,7 @@ function LegsToggle({
   return (
     <div className="flex items-center justify-between gap-4">
       <span className="text-sm font-medium">{label}</span>
-      <div className="flex overflow-hidden rounded-md border border-neutral-700 text-sm">
+      <div className="flex overflow-hidden rounded-full border border-neutral-700 text-sm">
         <button
           type="button"
           onClick={() => onChange('single')}
@@ -70,57 +88,48 @@ export function RulesEditor() {
   const updateConfig = useTournamentStore((s) => s.updateConfig)
 
   return (
-    <div className="space-y-4">
-      <label className="flex items-center justify-between gap-4">
-        <span className="text-sm font-medium">Usar fase de grupos</span>
-        <input
-          type="checkbox"
-          checked={config.useGroupStage}
-          onChange={(e) => updateConfig({ useGroupStage: e.target.checked })}
-          className="h-4 w-4"
-        />
-      </label>
+    <div className="space-y-3">
+      <ToggleRow
+        label="Usar fase de grupos"
+        checked={config.useGroupStage}
+        onChange={(v) => updateConfig({ useGroupStage: v })}
+      />
 
       {config.useGroupStage && (
-        <div className="grid gap-3 rounded-lg border border-neutral-800 p-3 sm:grid-cols-2">
-          <NumberField
-            label="Número de grupos"
-            value={config.groupCount}
-            min={1}
-            onChange={(v) => updateConfig({ groupCount: v })}
-          />
-          <NumberField
-            label="Classificados por grupo"
-            value={config.qualifiersPerGroup}
-            min={1}
-            onChange={(v) => updateConfig({ qualifiersPerGroup: v })}
-          />
-          <div className="sm:col-span-2">
-            <LegsToggle
-              label="Fase de grupos"
-              value={config.groupLegs}
-              onChange={(v) => updateConfig({ groupLegs: v })}
+        <div className="space-y-3 rounded-lg border border-neutral-800 p-3">
+          <div className="grid grid-cols-2 gap-3">
+            <NumberField
+              label="Nº de grupos"
+              value={config.groupCount}
+              min={1}
+              onChange={(v) => updateConfig({ groupCount: v })}
+            />
+            <NumberField
+              label="Classificados"
+              value={config.qualifiersPerGroup}
+              min={1}
+              onChange={(v) => updateConfig({ qualifiersPerGroup: v })}
             />
           </div>
+          <LegsToggle
+            label="Fase de grupos"
+            value={config.groupLegs}
+            onChange={(v) => updateConfig({ groupLegs: v })}
+          />
         </div>
       )}
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <LegsToggle
-          label="Mata-mata"
-          value={config.knockoutLegs}
-          onChange={(v) => updateConfig({ knockoutLegs: v })}
-        />
-        <label className="flex items-center justify-between gap-4">
-          <span className="text-sm font-medium">Disputa de 3º lugar</span>
-          <input
-            type="checkbox"
-            checked={config.thirdPlaceMatch}
-            onChange={(e) => updateConfig({ thirdPlaceMatch: e.target.checked })}
-            className="h-4 w-4"
-          />
-        </label>
-      </div>
+      <LegsToggle
+        label="Mata-mata"
+        value={config.knockoutLegs}
+        onChange={(v) => updateConfig({ knockoutLegs: v })}
+      />
+
+      <ToggleRow
+        label="Disputa de 3º lugar"
+        checked={config.thirdPlaceMatch}
+        onChange={(v) => updateConfig({ thirdPlaceMatch: v })}
+      />
     </div>
   )
 }

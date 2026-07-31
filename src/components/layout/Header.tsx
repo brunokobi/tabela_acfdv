@@ -19,11 +19,15 @@ export function Header() {
           alt="ACFDV"
           className="h-9 w-9 rounded-full ring-1 ring-green-500/40"
         />
-        <h1 className="text-xl font-semibold text-green-50">
-          {config.name || 'Campeonato E-Futebol'}
-        </h1>
+        <div>
+          <h1 className="text-xl font-semibold text-green-50">
+            {config.name || 'Campeonato E-Futebol'}
+          </h1>
+          <p className="text-xs text-neutral-500">Monte seu torneio</p>
+        </div>
       </div>
-      <div className="flex items-center gap-4">
+
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => setManagerOpen(true)}
@@ -33,26 +37,26 @@ export function Header() {
         </button>
         {managerOpen && <TournamentManager onClose={() => setManagerOpen(false)} />}
         {platform && (
-          <span className="flex items-center gap-2 text-sm text-neutral-300">
+          <div className="flex flex-col items-center gap-1 rounded-lg border-2 border-green-400 bg-green-950/40 px-3 py-2">
             <Logo
               src={platform.logoSrc}
               alt={platform.label}
               fallbackIcon={platform.fallbackIcon}
-              className="h-10 w-10 rounded-md ring-1 ring-white/10"
+              className="h-8 w-8"
             />
-            {platform.label}
-          </span>
+            <span className="text-xs font-medium text-neutral-100">{platform.label}</span>
+          </div>
         )}
         {game && (
-          <span className="flex items-center gap-2 text-sm text-neutral-300">
+          <div className="flex flex-col items-center gap-1 rounded-lg border-2 border-green-400 bg-green-950/40 px-3 py-2">
             <Logo
               src={game.logoSrc}
               alt={game.label}
               fallbackIcon={game.fallbackIcon}
-              className="h-10 w-10 rounded-md ring-1 ring-white/10"
+              className="h-8 w-8"
             />
-            {game.label}
-          </span>
+            <span className="text-xs font-medium text-neutral-100">{game.label}</span>
+          </div>
         )}
       </div>
     </header>

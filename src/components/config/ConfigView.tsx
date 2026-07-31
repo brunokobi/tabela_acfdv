@@ -1,6 +1,7 @@
+import { Trophy, Monitor, Gamepad2, Users, Shuffle, ListOrdered } from 'lucide-react'
 import { useTournamentStore } from '../../store/tournamentStore'
 import { PLATFORMS, GAMES } from '../../lib/catalog'
-import { Panel } from '../shared/Panel'
+import { Card } from '../shared/Card'
 import { CatalogSelector } from './CatalogSelector'
 import { TeamManager } from './TeamManager'
 import { RulesEditor } from './RulesEditor'
@@ -10,57 +11,55 @@ import { DangerZone } from './DangerZone'
 
 export function ConfigView() {
   const config = useTournamentStore((s) => s.config)
+  const teams = useTournamentStore((s) => s.teams)
   const updateConfig = useTournamentStore((s) => s.updateConfig)
 
   return (
-    <Panel className="space-y-6 divide-y divide-neutral-800/80">
-      <section className="space-y-4">
-        <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-400">
-            Nome do campeonato
-          </label>
+    <div className="mx-auto max-w-5xl space-y-4">
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card icon={Trophy} title="Nome do campeonato">
           <input
             value={config.name}
             onChange={(e) => updateConfig({ name: e.target.value })}
             placeholder="Ex: Copa do Mundo E-Futebol"
             className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:border-green-500 focus:outline-none"
           />
-        </div>
+        </Card>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <Card icon={Monitor} title="Plataforma">
           <CatalogSelector
-            label="Plataforma"
             options={PLATFORMS}
             selected={config.platform}
             onSelect={(id) => updateConfig({ platform: id })}
           />
+        </Card>
 
+        <Card icon={Gamepad2} title="Jogo">
           <CatalogSelector
-            label="Jogo"
             options={GAMES}
             selected={config.game}
             onSelect={(id) => updateConfig({ game: id })}
           />
-        </div>
-      </section>
+        </Card>
 
-      <section className="pt-6">
-        <TeamManager />
-      </section>
+        <Card icon={Users} title={`Equipes (${teams.length})`}>
+          <TeamManager />
+        </Card>
 
-      <section className="space-y-4 pt-6">
-        <h3 className="text-sm font-semibold text-neutral-300">Formato do campeonato</h3>
-        <RulesEditor />
-        {config.useGroupStage && <DrawGroupsButton />}
-      </section>
+        <Card
+          icon={Shuffle}
+          title="Formato do campeonato"
+          action={config.useGroupStage && <DrawGroupsButton />}
+        >
+          <RulesEditor />
+        </Card>
 
-      <section className="pt-6">
-        <TiebreakerEditor />
-      </section>
+        <Card icon={ListOrdered} title="Critérios de desempate">
+          <TiebreakerEditor />
+        </Card>
+      </div>
 
-      <section className="pt-6">
-        <DangerZone />
-      </section>
-    </Panel>
+      <DangerZone />
+    </div>
   )
 }

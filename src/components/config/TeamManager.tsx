@@ -22,7 +22,6 @@ export function TeamManager() {
 
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-neutral-400">Equipes ({teams.length})</h3>
       <form onSubmit={handleAdd} className="mb-3 flex gap-2">
         <input
           value={draft}

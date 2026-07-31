@@ -15,7 +15,6 @@ export function TiebreakerEditor() {
 
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-neutral-400">Critérios de desempate (em ordem)</h3>
       <ol className="space-y-1">
         {tiebreakers.map((tb, i) => (
           <li

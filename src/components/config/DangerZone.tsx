@@ -12,11 +12,13 @@ export function DangerZone() {
   }
 
   return (
-    <div className="rounded-lg border border-red-900/50 bg-red-950/20 p-4">
-      <h3 className="mb-1 text-sm font-medium text-red-400">Zona de perigo</h3>
-      <p className="mb-3 text-sm text-red-400/70">
-        Apaga todos os dados salvos neste navegador (equipes, grupos, placares e chaveamento).
-      </p>
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-900/50 bg-red-950/20 p-4">
+      <div>
+        <h3 className="text-sm font-medium text-red-400">Zona de perigo</h3>
+        <p className="text-sm text-red-400/70">
+          Apaga todos os dados salvos neste navegador (equipes, grupos, placares e chaveamento).
+        </p>
+      </div>
       <button
         type="button"
         onClick={handleClear}
