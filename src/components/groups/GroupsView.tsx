@@ -11,7 +11,7 @@ export function GroupsView() {
 
   if (!config.useGroupStage) {
     return (
-      <Panel maxWidth="max-w-3xl">
+      <Panel>
         <p className="text-sm text-neutral-500">
           A fase de grupos está desativada na Configuração — o torneio vai direto para o mata-mata.
         </p>
@@ -20,7 +20,7 @@ export function GroupsView() {
   }
 
   return (
-    <Panel maxWidth="max-w-5xl">
+    <Panel>
       {groups.length === 0 ? (
         <p className="text-sm text-neutral-400">
           Cadastre as equipes e sorteie os grupos na aba Configuração.

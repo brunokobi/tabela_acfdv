@@ -14,7 +14,7 @@ function App() {
     <div className="relative min-h-svh">
       <ParallaxBackground />
 
-      <div className="sticky top-0 z-20 border-b border-green-500/20 bg-black/25 shadow-[0_1px_20px_-4px_rgba(34,197,94,0.25)]">
+      <div className="sticky top-0 z-20 border-b border-green-500/20 bg-black shadow-[0_1px_20px_-4px_rgba(34,197,94,0.25)]">
         <Header />
         <TabNav active={tab} onChange={setTab} />
       </div>

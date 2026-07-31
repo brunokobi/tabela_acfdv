@@ -13,7 +13,7 @@ export function ConfigView() {
   const updateConfig = useTournamentStore((s) => s.updateConfig)
 
   return (
-    <Panel maxWidth="max-w-3xl">
+    <Panel>
       <div>
         <label className="mb-1 block text-sm font-medium text-neutral-400">
           Nome do campeonato

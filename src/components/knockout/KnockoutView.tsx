@@ -61,7 +61,7 @@ export function KnockoutView() {
   }
 
   return (
-    <Panel maxWidth="max-w-6xl" className="space-y-6">
+    <Panel className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-neutral-500">
           {qualifiedCount} equipe{qualifiedCount === 1 ? '' : 's'} no mata-mata
