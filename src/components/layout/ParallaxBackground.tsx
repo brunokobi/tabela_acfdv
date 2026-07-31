@@ -1,14 +1,15 @@
 import { useEffect, useRef } from 'react'
 
-const ICONS = ['⚽', '🏆', '🎮', '🕹', '👟', '🥅', '🏅']
+const CHARS =
+  'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789'
 
-const FONT_SIZE = 22
+const FONT_SIZE = 18
 const COLUMN_SPACING = FONT_SIZE * 2.4
 const FRAME_MS = 100
 const DRAW_PROBABILITY = 0.55
 
 /**
- * Matrix-style digital rain, canvas-driven (sports icons falling on black,
+ * Matrix-style digital rain, canvas-driven (green glyphs falling on black,
  * fading trail via a low-alpha redraw each frame) plus two mouse-reactive
  * glow blobs for parallax depth. Fixed behind all content, which scrolls
  * over it — the classic fixed-background parallax effect.
@@ -37,12 +38,13 @@ export function ParallaxBackground() {
     function draw() {
       ctx!.fillStyle = 'rgba(0, 0, 0, 0.08)'
       ctx!.fillRect(0, 0, canvas!.width, canvas!.height)
-      ctx!.font = `${FONT_SIZE}px sans-serif`
+      ctx!.font = `${FONT_SIZE}px monospace`
+      ctx!.fillStyle = '#22c55e'
 
       for (let i = 0; i < columns; i++) {
         if (Math.random() < DRAW_PROBABILITY) {
-          const icon = ICONS[Math.floor(Math.random() * ICONS.length)]
-          ctx!.fillText(icon, i * COLUMN_SPACING, drops[i] * FONT_SIZE)
+          const char = CHARS[Math.floor(Math.random() * CHARS.length)]
+          ctx!.fillText(char, i * COLUMN_SPACING, drops[i] * FONT_SIZE)
         }
         if (drops[i] * FONT_SIZE > canvas!.height && Math.random() > 0.975) {
           drops[i] = 0
@@ -77,11 +79,7 @@ export function ParallaxBackground() {
         <div className="absolute top-1/3 -right-40 h-[28rem] w-[28rem] rounded-full bg-green-400/10 blur-3xl" />
       </div>
 
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 opacity-80"
-        style={{ filter: 'grayscale(1) sepia(1) hue-rotate(70deg) saturate(6) brightness(0.9)' }}
-      />
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-80" />
     </div>
   )
 }
