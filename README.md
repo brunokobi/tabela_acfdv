@@ -102,6 +102,11 @@ src/
     shared/                 # componentes reutilizáveis (score input, logo)
 ```
 
+## 🛠️ Para quem for mexer no código
+
+Decisões de arquitetura, pegadinhas do ambiente de dev (WSL) e um bug já corrigido que
+vale a pena conhecer antes de alterar o chaveamento ou o fundo: [`docs/NOTAS-TECNICAS.md`](docs/NOTAS-TECNICAS.md).
+
 ---
 
 © 2026 [Bruno Kobi](https://brunokobi.netlify.app/). Todos os direitos reservados.
