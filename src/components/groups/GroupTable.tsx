@@ -27,8 +27,8 @@ export function GroupTable({ standings, names, qualifiersPerGroup }: GroupTableP
           <tr
             key={s.teamId}
             className={cn(
-              'border-t border-neutral-100 dark:border-neutral-800',
-              i < qualifiersPerGroup && 'bg-emerald-50 dark:bg-emerald-950/20',
+              'border-t border-neutral-800',
+              i < qualifiersPerGroup && 'bg-emerald-950/30',
             )}
           >
             <td className="py-1">{i + 1}</td>

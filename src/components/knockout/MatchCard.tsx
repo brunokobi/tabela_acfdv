@@ -23,7 +23,7 @@ export function MatchCard({ match, legsMode, onLegChange, onPenaltyChange, onWOC
   const disabled = !home || !away
 
   return (
-    <div className="w-64 rounded-lg border border-neutral-200 bg-white p-3 text-sm shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+    <div className="w-64 rounded-lg border border-neutral-800 bg-neutral-900 p-3 text-sm shadow-sm">
       <p className="mb-2 text-xs font-medium uppercase text-neutral-400">{match.phase}</p>
       <TeamRow
         name={homeName}
@@ -46,7 +46,7 @@ export function MatchCard({ match, legsMode, onLegChange, onPenaltyChange, onWOC
         woActive={record?.wo === 'away'}
       />
       {needsPens && (
-        <div className="mt-2 flex items-center justify-between gap-2 border-t border-neutral-100 pt-2 text-xs text-neutral-500 dark:border-neutral-800">
+        <div className="mt-2 flex items-center justify-between gap-2 border-t border-neutral-800 pt-2 text-xs text-neutral-500">
           <span>Pênaltis</span>
           <div className="flex items-center gap-1">
             <ScoreInput
@@ -81,7 +81,7 @@ function TeamRow({ name, isWinner, legs, side, disabled, onLegChange, onWO, woAc
     <div
       className={cn(
         'flex items-center gap-2 py-1',
-        isWinner && 'font-semibold text-emerald-600 dark:text-emerald-400',
+        isWinner && 'font-semibold text-emerald-400',
       )}
     >
       <span className="flex-1 truncate">{name}</span>
@@ -102,7 +102,7 @@ function TeamRow({ name, isWinner, legs, side, disabled, onLegChange, onWO, woAc
           'rounded px-1 text-[10px] font-bold uppercase',
           woActive
             ? 'bg-amber-500 text-white'
-            : 'text-neutral-300 hover:text-amber-600 disabled:opacity-30 dark:text-neutral-600',
+            : 'text-neutral-600 hover:text-amber-500 disabled:opacity-30',
         )}
       >
         WO

@@ -31,7 +31,7 @@ export function DrawGroupsButton() {
         type="button"
         onClick={handleDraw}
         disabled={teams.length < config.groupCount}
-        className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-40"
+        className="flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-40"
       >
         <Shuffle className="h-4 w-4" />
         {groups.length > 0 ? 'Sortear novamente' : 'Sortear grupos'}

@@ -53,9 +53,9 @@ export function DrawRevealOverlay({ title, items, pool, onFinish }: DrawRevealOv
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/85 px-6 backdrop-blur-sm">
-      <p className="mb-2 text-xs font-medium tracking-widest text-indigo-300 uppercase">{title}</p>
+      <p className="mb-2 text-xs font-medium tracking-widest text-green-400 uppercase">{title}</p>
       <p className="mb-6 text-lg text-neutral-300">{current.label}</p>
-      <p className="mb-10 max-w-full truncate text-4xl font-bold text-white">{spinningText}</p>
+      <p className="mb-10 max-w-full truncate text-4xl font-bold text-green-400">{spinningText}</p>
 
       {revealed.length > 0 && (
         <div className="mb-10 flex max-w-2xl flex-wrap justify-center gap-2">

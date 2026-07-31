@@ -22,19 +22,17 @@ export function TeamManager() {
 
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">
-        Equipes ({teams.length})
-      </h3>
+      <h3 className="mb-2 text-sm font-medium text-neutral-400">Equipes ({teams.length})</h3>
       <form onSubmit={handleAdd} className="mb-3 flex gap-2">
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Nome da equipe"
-          className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="flex-1 rounded-md border border-neutral-700 bg-neutral-900 px-3 py-1.5 text-sm text-neutral-100 focus:border-green-500 focus:outline-none"
         />
         <button
           type="submit"
-          className="flex items-center gap-1 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+          className="flex items-center gap-1 rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700"
         >
           <Plus className="h-4 w-4" /> Adicionar
         </button>
@@ -45,10 +43,10 @@ export function TeamManager() {
             <input
               value={team.name}
               onChange={(e) => renameTeam(team.id, e.target.value)}
-              className="flex-1 rounded-md border border-transparent bg-transparent px-2 py-1 text-sm hover:border-neutral-200 focus:border-neutral-300 focus:outline-none dark:hover:border-neutral-800"
+              className="flex-1 rounded-md border border-transparent bg-transparent px-2 py-1 text-sm text-neutral-100 hover:border-neutral-800 focus:border-green-500 focus:outline-none"
             />
             {team.groupId && (
-              <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
+              <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-xs text-neutral-400">
                 Grupo {groupName(team.groupId)}
               </span>
             )}

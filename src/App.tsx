@@ -14,12 +14,12 @@ function App() {
     <div className="relative min-h-svh">
       <ParallaxBackground />
 
-      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md dark:bg-neutral-950/80">
+      <div className="sticky top-0 z-20 border-b border-green-500/20 bg-black/90 shadow-[0_1px_20px_-4px_rgba(34,197,94,0.25)] backdrop-blur-md">
         <Header />
         <TabNav active={tab} onChange={setTab} />
       </div>
 
-      <main className="mx-4 my-6 rounded-2xl border border-neutral-200/60 bg-white/70 shadow-xl backdrop-blur-md sm:mx-6 dark:border-neutral-800/60 dark:bg-neutral-900/50">
+      <main className="mx-4 my-6 rounded-2xl border border-green-500/20 bg-black/70 shadow-xl backdrop-blur-md sm:mx-6">
         {tab === 'config' && <ConfigView />}
         {tab === 'grupos' && <GroupsView />}
         {tab === 'mata-mata' && <KnockoutView />}

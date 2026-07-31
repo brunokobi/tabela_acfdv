@@ -66,15 +66,13 @@ export function KnockoutView() {
           {qualifiedCount} equipe{qualifiedCount === 1 ? '' : 's'} no mata-mata
         </p>
         <div className="flex items-center gap-3">
-          <div className="flex overflow-hidden rounded-md border border-neutral-300 text-sm dark:border-neutral-700">
+          <div className="flex overflow-hidden rounded-md border border-neutral-700 text-sm">
             <button
               type="button"
               onClick={() => setViewMode('tabela')}
               className={cn(
                 'flex items-center gap-1 px-3 py-1.5',
-                viewMode === 'tabela'
-                  ? 'bg-indigo-600 text-white'
-                  : 'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+                viewMode === 'tabela' ? 'bg-green-600 text-white' : 'hover:bg-neutral-800',
               )}
             >
               <LayoutList className="h-4 w-4" /> Tabela
@@ -84,9 +82,7 @@ export function KnockoutView() {
               onClick={() => setViewMode('chaveamento')}
               className={cn(
                 'flex items-center gap-1 px-3 py-1.5',
-                viewMode === 'chaveamento'
-                  ? 'bg-indigo-600 text-white'
-                  : 'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+                viewMode === 'chaveamento' ? 'bg-green-600 text-white' : 'hover:bg-neutral-800',
               )}
             >
               <Network className="h-4 w-4" /> Chaveamento
@@ -96,7 +92,7 @@ export function KnockoutView() {
             type="button"
             onClick={handleDraw}
             disabled={qualifiedCount < 2}
-            className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-40"
+            className="flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-40"
           >
             <Shuffle className="h-4 w-4" />
             {knockoutDraw ? 'Sortear novamente' : 'Sortear mata-mata'}

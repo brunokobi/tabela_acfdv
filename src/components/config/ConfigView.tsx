@@ -14,14 +14,14 @@ export function ConfigView() {
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-6 py-8">
       <div>
-        <label className="mb-1 block text-sm font-medium text-neutral-600 dark:text-neutral-400">
+        <label className="mb-1 block text-sm font-medium text-neutral-400">
           Nome do campeonato
         </label>
         <input
           value={config.name}
           onChange={(e) => updateConfig({ name: e.target.value })}
           placeholder="Ex: Copa do Mundo E-Futebol"
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:border-green-500 focus:outline-none"
         />
       </div>
 

@@ -1,79 +1,83 @@
 import { useEffect, useRef } from 'react'
-import { Gamepad2, Trophy, CircleDot, Joystick } from 'lucide-react'
 
-const ICONS = [Gamepad2, Trophy, CircleDot, Joystick]
+const CHARS =
+  'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789'
 
-// Deterministic layout (no Math.random) so it stays stable across re-renders/HMR.
-const FLOATERS = Array.from({ length: 10 }, (_, i) => ({
-  Icon: ICONS[i % ICONS.length],
-  top: `${(i * 37) % 90}%`,
-  left: `${(i * 53) % 95}%`,
-  size: 24 + (i % 4) * 10,
-  duration: 14 + (i % 5) * 4,
-  delay: -(i * 2.3),
-}))
+const FONT_SIZE = 16
+const FRAME_MS = 50
 
 /**
- * Fixed decorative layer: mouse-reactive glow orbs (parallax depth) + a faint
- * scanline texture + slow-drifting theme icons. Sits behind all content, which
- * scrolls over it — the classic fixed-background parallax effect.
+ * Matrix-style digital rain, canvas-driven (green glyphs falling on black,
+ * fading trail via a low-alpha redraw each frame) plus two mouse-reactive
+ * glow blobs for parallax depth. Fixed behind all content, which scrolls
+ * over it — the classic fixed-background parallax effect.
  */
 export function ParallaxBackground() {
-  const orbsRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const glowRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!canvas || !ctx) return
+
+    let columns = 0
+    let drops: number[] = []
+
+    function resize() {
+      canvas!.width = window.innerWidth
+      canvas!.height = window.innerHeight
+      columns = Math.floor(canvas!.width / FONT_SIZE)
+      drops = Array.from({ length: columns }, () => Math.floor(Math.random() * -50))
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    function draw() {
+      ctx!.fillStyle = 'rgba(0, 0, 0, 0.06)'
+      ctx!.fillRect(0, 0, canvas!.width, canvas!.height)
+      ctx!.font = `${FONT_SIZE}px monospace`
+      ctx!.fillStyle = '#22c55e'
+
+      for (let i = 0; i < columns; i++) {
+        const char = CHARS[Math.floor(Math.random() * CHARS.length)]
+        ctx!.fillText(char, i * FONT_SIZE, drops[i] * FONT_SIZE)
+        if (drops[i] * FONT_SIZE > canvas!.height && Math.random() > 0.975) {
+          drops[i] = 0
+        }
+        drops[i]++
+      }
+    }
+
+    const interval = setInterval(draw, FRAME_MS)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('resize', resize)
+    }
+  }, [])
 
   useEffect(() => {
     function handleMove(e: MouseEvent) {
       const x = (e.clientX / window.innerWidth - 0.5) * 2
       const y = (e.clientY / window.innerHeight - 0.5) * 2
-      const orbs = orbsRef.current?.querySelectorAll<HTMLElement>('[data-depth]')
-      orbs?.forEach((el) => {
-        const depth = Number(el.dataset.depth)
-        el.style.transform = `translate3d(${x * depth}px, ${y * depth}px, 0)`
-      })
+      if (glowRef.current) {
+        glowRef.current.style.transform = `translate3d(${x * 22}px, ${y * 22}px, 0)`
+      }
     }
     window.addEventListener('mousemove', handleMove)
     return () => window.removeEventListener('mousemove', handleMove)
   }, [])
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-neutral-50 dark:bg-neutral-950" aria-hidden>
-      <div ref={orbsRef} className="absolute inset-0">
-        <div
-          data-depth="18"
-          className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-indigo-400/20 blur-3xl transition-transform duration-300 ease-out dark:bg-indigo-500/20"
-        />
-        <div
-          data-depth="28"
-          className="absolute top-1/4 -right-24 h-[28rem] w-[28rem] rounded-full bg-emerald-400/15 blur-3xl transition-transform duration-300 ease-out dark:bg-emerald-500/15"
-        />
-        <div
-          data-depth="12"
-          className="absolute bottom-[-10%] left-1/3 h-96 w-96 rounded-full bg-fuchsia-400/10 blur-3xl transition-transform duration-300 ease-out dark:bg-fuchsia-500/15"
-        />
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-black" aria-hidden>
+      <div ref={glowRef} className="absolute inset-0 transition-transform duration-300 ease-out">
+        <div className="absolute -top-40 -left-40 h-[32rem] w-[32rem] rounded-full bg-green-500/15 blur-3xl" />
+        <div className="absolute top-1/3 -right-40 h-[28rem] w-[28rem] rounded-full bg-green-400/10 blur-3xl" />
       </div>
 
-      <div
-        className="absolute inset-0 text-indigo-500 opacity-[0.05] dark:opacity-[0.08]"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg, transparent, transparent 3px, currentColor 3px, currentColor 4px)',
-        }}
-      />
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-80" />
 
-      {FLOATERS.map(({ Icon, top, left, size, duration, delay }, i) => (
-        <Icon
-          key={i}
-          className="animate-float absolute text-indigo-500/10 dark:text-indigo-400/10"
-          style={{
-            top,
-            left,
-            width: size,
-            height: size,
-            animationDuration: `${duration}s`,
-            animationDelay: `${delay}s`,
-          }}
-        />
-      ))}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70" />
     </div>
   )
 }

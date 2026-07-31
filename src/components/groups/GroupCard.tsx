@@ -28,7 +28,7 @@ export function GroupCard({
   const names = useMemo(() => new Map(teams.map((t) => [t.id, t.name])), [teams])
 
   return (
-    <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+    <div className="rounded-lg border border-neutral-800 p-4">
       <h3 className="mb-3 font-semibold">Grupo {groupName}</h3>
       <GroupTable standings={standings} names={names} qualifiersPerGroup={qualifiersPerGroup} />
       <FixtureList matches={matches} names={names} onScoreChange={onScoreChange} />

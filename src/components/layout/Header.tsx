@@ -8,11 +8,20 @@ export function Header() {
   const game = GAMES.find((g) => g.id === config.game)
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
-      <h1 className="text-xl font-semibold">{config.name || 'Campeonato E-Futebol'}</h1>
+    <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
+      <div className="flex items-center gap-3">
+        <img
+          src="/favicon.jpg"
+          alt="ACFDV"
+          className="h-9 w-9 rounded-full ring-1 ring-green-500/40"
+        />
+        <h1 className="text-xl font-semibold text-green-50">
+          {config.name || 'Campeonato E-Futebol'}
+        </h1>
+      </div>
       <div className="flex items-center gap-3">
         {platform && (
-          <span className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400">
+          <span className="flex items-center gap-1.5 text-sm text-neutral-400">
             <Logo
               src={platform.logoSrc}
               alt={platform.label}
@@ -23,7 +32,7 @@ export function Header() {
           </span>
         )}
         {game && (
-          <span className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400">
+          <span className="flex items-center gap-1.5 text-sm text-neutral-400">
             <Logo
               src={game.logoSrc}
               alt={game.label}

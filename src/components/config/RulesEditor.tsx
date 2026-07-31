@@ -21,7 +21,7 @@ function NumberField({
         min={min}
         value={value}
         onChange={(e) => onChange(Math.max(min, Number(e.target.value) || min))}
-        className="w-20 rounded-md border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+        className="w-20 rounded-md border border-neutral-700 bg-neutral-900 px-2 py-1 text-sm text-neutral-100 focus:border-green-500 focus:outline-none"
       />
     </label>
   )
@@ -39,15 +39,13 @@ function LegsToggle({
   return (
     <div className="flex items-center justify-between gap-4">
       <span className="text-sm font-medium">{label}</span>
-      <div className="flex overflow-hidden rounded-md border border-neutral-300 text-sm dark:border-neutral-700">
+      <div className="flex overflow-hidden rounded-md border border-neutral-700 text-sm">
         <button
           type="button"
           onClick={() => onChange('single')}
           className={cn(
             'px-3 py-1',
-            value === 'single'
-              ? 'bg-indigo-600 text-white'
-              : 'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+            value === 'single' ? 'bg-green-600 text-white' : 'hover:bg-neutral-800',
           )}
         >
           Jogo único
@@ -57,9 +55,7 @@ function LegsToggle({
           onClick={() => onChange('double')}
           className={cn(
             'px-3 py-1',
-            value === 'double'
-              ? 'bg-indigo-600 text-white'
-              : 'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+            value === 'double' ? 'bg-green-600 text-white' : 'hover:bg-neutral-800',
           )}
         >
           Ida e volta
