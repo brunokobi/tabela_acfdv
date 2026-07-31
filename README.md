@@ -10,6 +10,8 @@ Site para organizar campeonatos de e-futebol (FIFA/EA Sports FC, eFootball) do z
 ![Zustand](https://img.shields.io/badge/state-zustand-443E38?style=flat-square)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)
 
+![Tela de configuração](docs/screenshots/configuracao.png)
+
 ## ✨ Funcionalidades
 
 - **Sorteio automático** de equipes nos grupos e do chaveamento do mata-mata.
