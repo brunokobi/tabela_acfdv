@@ -3,6 +3,7 @@ import { PLATFORMS, GAMES } from '../../lib/catalog'
 import { CatalogSelector } from './CatalogSelector'
 import { TeamManager } from './TeamManager'
 import { RulesEditor } from './RulesEditor'
+import { DrawGroupsButton } from './DrawGroupsButton'
 import { TiebreakerEditor } from './TiebreakerEditor'
 import { DangerZone } from './DangerZone'
 
@@ -40,6 +41,7 @@ export function ConfigView() {
 
       <TeamManager />
       <RulesEditor />
+      {config.useGroupStage && <DrawGroupsButton />}
       <TiebreakerEditor />
       <DangerZone />
     </div>

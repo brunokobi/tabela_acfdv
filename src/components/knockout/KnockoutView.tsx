@@ -3,6 +3,7 @@ import { Shuffle, LayoutList, Network } from 'lucide-react'
 import { useTournamentStore } from '../../store/tournamentStore'
 import { buildKnockoutView } from '../../lib/bracket'
 import { cn } from '../../lib/cn'
+import { DrawRevealOverlay, type RevealItem } from '../shared/DrawRevealOverlay'
 import { KnockoutTable } from './KnockoutTable'
 import { BracketView } from './BracketView'
 
@@ -19,6 +20,7 @@ export function KnockoutView() {
   const setKnockoutPenalty = useTournamentStore((s) => s.setKnockoutPenalty)
   const setKnockoutWO = useTournamentStore((s) => s.setKnockoutWO)
   const [viewMode, setViewMode] = useState<ViewMode>('chaveamento')
+  const [revealItems, setRevealItems] = useState<RevealItem[] | null>(null)
 
   const qualifiedCount = useMemo(() => {
     if (!config.useGroupStage) return teams.length
@@ -37,6 +39,24 @@ export function KnockoutView() {
     onLegChange: setKnockoutLeg,
     onPenaltyChange: setKnockoutPenalty,
     onWOChange: setKnockoutWO,
+  }
+
+  function handleDraw() {
+    drawKnockout()
+    const state = useTournamentStore.getState()
+    const draw = state.knockoutDraw
+    if (!draw) return
+    const teamName = (id: string | null) =>
+      id ? (state.teams.find((t) => t.id === id)?.name ?? '?') : null
+
+    const items: RevealItem[] = []
+    for (let i = 0; i < draw.round1.length / 2; i++) {
+      const home = teamName(draw.round1[i * 2]?.teamId ?? null)
+      const away = teamName(draw.round1[i * 2 + 1]?.teamId ?? null)
+      const finalText = home && away ? `${home} × ${away}` : `${home ?? away} (W.O.)`
+      items.push({ key: `pair-${i}`, label: `Confronto ${i + 1}`, finalText })
+    }
+    setRevealItems(items)
   }
 
   return (
@@ -74,7 +94,7 @@ export function KnockoutView() {
           </div>
           <button
             type="button"
-            onClick={drawKnockout}
+            onClick={handleDraw}
             disabled={qualifiedCount < 2}
             className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-40"
           >
@@ -83,6 +103,15 @@ export function KnockoutView() {
           </button>
         </div>
       </div>
+
+      {revealItems && (
+        <DrawRevealOverlay
+          title="Sorteio do Mata-Mata"
+          items={revealItems}
+          pool={teams.map((t) => t.name)}
+          onFinish={() => setRevealItems(null)}
+        />
+      )}
 
       {!knockoutDraw ? (
         <p className="text-sm text-neutral-400">
