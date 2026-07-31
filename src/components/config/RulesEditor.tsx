@@ -82,7 +82,7 @@ export function RulesEditor() {
       </label>
 
       {config.useGroupStage && (
-        <>
+        <div className="grid gap-3 rounded-lg border border-neutral-800 p-3 sm:grid-cols-2">
           <NumberField
             label="Número de grupos"
             value={config.groupCount}
@@ -95,29 +95,32 @@ export function RulesEditor() {
             min={1}
             onChange={(v) => updateConfig({ qualifiersPerGroup: v })}
           />
-          <LegsToggle
-            label="Fase de grupos"
-            value={config.groupLegs}
-            onChange={(v) => updateConfig({ groupLegs: v })}
-          />
-        </>
+          <div className="sm:col-span-2">
+            <LegsToggle
+              label="Fase de grupos"
+              value={config.groupLegs}
+              onChange={(v) => updateConfig({ groupLegs: v })}
+            />
+          </div>
+        </div>
       )}
 
-      <LegsToggle
-        label="Mata-mata"
-        value={config.knockoutLegs}
-        onChange={(v) => updateConfig({ knockoutLegs: v })}
-      />
-
-      <label className="flex items-center justify-between gap-4">
-        <span className="text-sm font-medium">Disputa de 3º lugar</span>
-        <input
-          type="checkbox"
-          checked={config.thirdPlaceMatch}
-          onChange={(e) => updateConfig({ thirdPlaceMatch: e.target.checked })}
-          className="h-4 w-4"
+      <div className="grid gap-3 sm:grid-cols-2">
+        <LegsToggle
+          label="Mata-mata"
+          value={config.knockoutLegs}
+          onChange={(v) => updateConfig({ knockoutLegs: v })}
         />
-      </label>
+        <label className="flex items-center justify-between gap-4">
+          <span className="text-sm font-medium">Disputa de 3º lugar</span>
+          <input
+            type="checkbox"
+            checked={config.thirdPlaceMatch}
+            onChange={(e) => updateConfig({ thirdPlaceMatch: e.target.checked })}
+            className="h-4 w-4"
+          />
+        </label>
+      </div>
     </div>
   )
 }
