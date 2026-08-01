@@ -7,7 +7,7 @@ import { DrawRevealOverlay, type RevealItem } from '../shared/DrawRevealOverlay'
 import { Panel } from '../shared/Panel'
 import { KnockoutTable } from './KnockoutTable'
 import { BracketView } from './BracketView'
-import { ChampionBanner } from './ChampionBanner'
+import { Podium } from './Podium'
 import { ChampionCelebration } from './ChampionCelebration'
 
 type ViewMode = 'tabela' | 'chaveamento'
@@ -47,6 +47,16 @@ export function KnockoutView() {
     ? championId === finalMatch?.home
       ? finalMatch?.homeName
       : finalMatch?.awayName
+    : null
+  const runnerUpName = championId
+    ? championId === finalMatch?.home
+      ? finalMatch?.awayName
+      : finalMatch?.homeName
+    : null
+  const thirdPlaceName = thirdPlaceEntry?.winner
+    ? thirdPlaceEntry.winner === thirdPlaceEntry.home
+      ? thirdPlaceEntry.homeName
+      : thirdPlaceEntry.awayName
     : null
 
   const shouldCelebrate = championId != null && championId !== celebratedChampion
@@ -135,7 +145,7 @@ export function KnockoutView() {
 
       {championName && (
         <div className="flex justify-center">
-          <ChampionBanner championName={championName} />
+          <Podium champion={championName} runnerUp={runnerUpName} thirdPlace={thirdPlaceName} />
         </div>
       )}
 
