@@ -10,6 +10,16 @@ Site para organizar campeonatos de e-futebol (FIFA/EA Sports FC, eFootball) do z
 ![Zustand](https://img.shields.io/badge/state-zustand-443E38?style=flat-square)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)
 
+<div align="center">
+
+<a href="https://github.com/sponsors/brunokobi">
+  <img src="https://img.shields.io/badge/%E2%9D%A4%EF%B8%8F%20Apoiar%20este%20projeto-GitHub%20Sponsors-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white" alt="Apoiar no GitHub Sponsors" height="42">
+</a>
+
+### ⭐ Se este projeto te for útil, **deixe uma estrela** — leva 1 segundo, é de graça e ajuda demais a dar visibilidade ao trabalho!
+
+</div>
+
 ![Tela de configuração](docs/screenshots/configuracao.png)
 
 ## ✨ Funcionalidades
@@ -108,6 +118,12 @@ src/
 
 Decisões de arquitetura, pegadinhas do ambiente de dev (WSL) e um bug já corrigido que
 vale a pena conhecer antes de alterar o chaveamento ou o fundo: [`docs/NOTAS-TECNICAS.md`](docs/NOTAS-TECNICAS.md).
+
+## 💛 Apoie o projeto
+
+[![GitHub Sponsors](https://img.shields.io/badge/❤%EF%B8%8F%20Apoiar-github.com%2Fsponsors%2Fbrunokobi-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/brunokobi)
+
+Projeto aberto e gratuito, feito e mantido nas horas vagas — se ele te ajudou a organizar um campeonato, considere apoiar.
 
 ---
 
