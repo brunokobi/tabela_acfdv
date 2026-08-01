@@ -1,15 +1,33 @@
 import { useState } from 'react'
-import { Layers } from 'lucide-react'
+import { Layers, Download } from 'lucide-react'
 import { useTournamentStore } from '../../store/tournamentStore'
 import { PLATFORMS, GAMES } from '../../lib/catalog'
+import { exportTournamentToExcel } from '../../lib/exportExcel'
 import { Logo } from '../shared/Logo'
 import { TournamentManager } from '../tournaments/TournamentManager'
 
 export function Header() {
   const config = useTournamentStore((s) => s.config)
+  const teams = useTournamentStore((s) => s.teams)
+  const groups = useTournamentStore((s) => s.groups)
+  const groupMatches = useTournamentStore((s) => s.groupMatches)
+  const knockoutDraw = useTournamentStore((s) => s.knockoutDraw)
+  const knockoutRecords = useTournamentStore((s) => s.knockoutRecords)
   const platform = PLATFORMS.find((p) => p.id === config.platform)
   const game = GAMES.find((g) => g.id === config.game)
   const [managerOpen, setManagerOpen] = useState(false)
+
+  function handleExport() {
+    exportTournamentToExcel({
+      teams,
+      groups,
+      groupMatches,
+      tiebreakers: config.tiebreakers,
+      knockoutDraw,
+      knockoutRecords,
+      thirdPlaceMatch: config.thirdPlaceMatch,
+    })
+  }
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
@@ -36,6 +54,15 @@ export function Header() {
           <Layers className="h-4 w-4" /> Torneios
         </button>
         {managerOpen && <TournamentManager onClose={() => setManagerOpen(false)} />}
+        <button
+          type="button"
+          onClick={handleExport}
+          disabled={teams.length === 0}
+          title="Baixar todos os dados do campeonato (grupos e mata-mata) em Excel"
+          className="flex items-center gap-2 rounded-md border border-green-500/30 px-3 py-1.5 text-sm font-medium text-green-400 hover:bg-green-950/30 disabled:opacity-30"
+        >
+          <Download className="h-4 w-4" /> Baixar Excel
+        </button>
         {platform && (
           <div className="flex flex-col items-center gap-1 rounded-lg border-2 border-green-400 bg-green-950/40 px-3 py-2">
             <Logo
