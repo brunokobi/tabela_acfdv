@@ -7,6 +7,8 @@ import { DrawRevealOverlay, type RevealItem } from '../shared/DrawRevealOverlay'
 import { Panel } from '../shared/Panel'
 import { KnockoutTable } from './KnockoutTable'
 import { BracketView } from './BracketView'
+import { ChampionBanner } from './ChampionBanner'
+import { ChampionCelebration } from './ChampionCelebration'
 
 type ViewMode = 'tabela' | 'chaveamento'
 
@@ -20,6 +22,8 @@ export function KnockoutView() {
   const setKnockoutLeg = useTournamentStore((s) => s.setKnockoutLeg)
   const setKnockoutPenalty = useTournamentStore((s) => s.setKnockoutPenalty)
   const setKnockoutWO = useTournamentStore((s) => s.setKnockoutWO)
+  const celebratedChampion = useTournamentStore((s) => s.celebratedChampion)
+  const markChampionCelebrated = useTournamentStore((s) => s.markChampionCelebrated)
   const storeApi = useTournamentStoreApi()
   const [viewMode, setViewMode] = useState<ViewMode>('chaveamento')
   const [revealItems, setRevealItems] = useState<RevealItem[] | null>(null)
@@ -36,6 +40,20 @@ export function KnockoutView() {
     if (!knockoutDraw) return { roundsData: [], thirdPlaceEntry: null }
     return buildKnockoutView(knockoutDraw, knockoutRecords, teams, config.thirdPlaceMatch)
   }, [knockoutDraw, knockoutRecords, teams, config.thirdPlaceMatch])
+
+  const finalMatch = roundsData[roundsData.length - 1]?.[0] ?? null
+  const championId = finalMatch?.winner ?? null
+  const championName = championId
+    ? championId === finalMatch?.home
+      ? finalMatch?.homeName
+      : finalMatch?.awayName
+    : null
+
+  const shouldCelebrate = championId != null && championId !== celebratedChampion
+
+  function handleCelebrationFinish() {
+    if (championId) markChampionCelebrated(championId)
+  }
 
   const handlers = {
     onLegChange: setKnockoutLeg,
@@ -109,6 +127,16 @@ export function KnockoutView() {
           pool={teams.map((t) => t.name)}
           onFinish={() => setRevealItems(null)}
         />
+      )}
+
+      {shouldCelebrate && championName && (
+        <ChampionCelebration championName={championName} onFinish={handleCelebrationFinish} />
+      )}
+
+      {championName && (
+        <div className="flex justify-center">
+          <ChampionBanner championName={championName} />
+        </div>
       )}
 
       {!knockoutDraw ? (

@@ -62,6 +62,7 @@ export interface TournamentState {
   groupMatches: GroupMatch[]
   knockoutDraw: KnockoutDraw | null
   knockoutRecords: Record<string, KnockoutRecord>
+  celebratedChampion: string | null
 
   updateConfig: (patch: Partial<TournamentConfig>) => void
   setTiebreakers: (tiebreakers: Tiebreaker[]) => void
@@ -82,6 +83,7 @@ export interface TournamentState {
   ) => void
   setKnockoutPenalty: (key: string, side: 'home' | 'away', value: number | null) => void
   setKnockoutWO: (key: string, side: 'home' | 'away' | null) => void
+  markChampionCelebrated: (teamId: string) => void
 
   resetAll: () => void
 }
@@ -96,6 +98,7 @@ export function createTournamentStore(storageKey: string): StoreApi<TournamentSt
         groupMatches: [],
         knockoutDraw: null,
         knockoutRecords: {},
+        celebratedChampion: null,
 
         updateConfig: (patch) => set((state) => ({ config: { ...state.config, ...patch } })),
         setTiebreakers: (tiebreakers) =>
@@ -136,7 +139,14 @@ export function createTournamentStore(storageKey: string): StoreApi<TournamentSt
             )
           })
 
-          set({ groups, teams: updatedTeams, groupMatches, knockoutDraw: null, knockoutRecords: {} })
+          set({
+            groups,
+            teams: updatedTeams,
+            groupMatches,
+            knockoutDraw: null,
+            knockoutRecords: {},
+            celebratedChampion: null,
+          })
         },
 
         setGroupMatchScore: (matchId, homeGoals, awayGoals) =>
@@ -160,7 +170,11 @@ export function createTournamentStore(storageKey: string): StoreApi<TournamentSt
             poolIds = teams.map((t) => t.id)
           }
           if (poolIds.length < 2) return
-          set({ knockoutDraw: buildKnockoutDraw(poolIds), knockoutRecords: {} })
+          set({
+            knockoutDraw: buildKnockoutDraw(poolIds),
+            knockoutRecords: {},
+            celebratedChampion: null,
+          })
         },
 
         setKnockoutLeg: (key, legIndex, side, value) =>
@@ -192,6 +206,8 @@ export function createTournamentStore(storageKey: string): StoreApi<TournamentSt
             return { knockoutRecords: { ...state.knockoutRecords, [key]: { ...record, wo: side } } }
           }),
 
+        markChampionCelebrated: (teamId) => set({ celebratedChampion: teamId }),
+
         resetAll: () =>
           set({
             config: defaultConfig(),
@@ -200,6 +216,7 @@ export function createTournamentStore(storageKey: string): StoreApi<TournamentSt
             groupMatches: [],
             knockoutDraw: null,
             knockoutRecords: {},
+            celebratedChampion: null,
           }),
       }),
       {
